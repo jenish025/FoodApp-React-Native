@@ -1,11 +1,13 @@
 import { StyleSheet, Text, View, Image, Dimensions } from "react-native";
 import React, { useEffect, useState } from "react";
 import * as Location from "expo-location";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useDispatch } from "react-redux";
+import { USER_LOCATION } from "../redux/models";
 
 const screenWidth = Dimensions.get("screen").width;
 
 const LandingScreen = (props: any) => {
+  const dispactch = useDispatch();
   const [address, setAddress] = useState<Location.LocationGeocodedAddress>();
   const [errorMsg, setErrorMsg] = useState("");
   const [displayAddress, setDisplayAddress] = useState("Wating for Loction");
@@ -28,12 +30,12 @@ const LandingScreen = (props: any) => {
         });
         for (let item of addressResponce) {
           setAddress(item);
+          dispactch({
+            type: USER_LOCATION,
+            data: item,
+          });
           let currentAddress = `${item?.name},${item?.street},${item?.postalCode},${item?.country}`;
           setDisplayAddress(currentAddress);
-          await AsyncStorage.setItem("LocationName", item?.name);
-          await AsyncStorage.setItem("LocationStreet", item?.street);
-          await AsyncStorage.setItem("LocationPostalCode", item?.postalCode);
-          await AsyncStorage.setItem("LocationCountry", item?.country);
           if (currentAddress.length > 0) {
             setTimeout(() => {
               props?.navigation.navigate("homeStack");

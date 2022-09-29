@@ -4,7 +4,7 @@ import { createStackNavigator } from "react-navigation-stack";
 import { createBottomTabNavigator } from "react-navigation-tabs";
 import { createSwitchNavigator, createAppContainer } from "react-navigation";
 import HomeScreens from "./src/screens/HomeScreens";
-// import { store } from "./src/redux/stores";
+import { store } from "./src/redux/stores";
 import { Provider } from "react-redux";
 
 const switchNavigator = createSwitchNavigator({
@@ -13,6 +13,7 @@ const switchNavigator = createSwitchNavigator({
       {
         Landing: LandingScreen,
       },
+
       {
         defaultNavigationOptions: {
           headerShown: false,
@@ -22,9 +23,16 @@ const switchNavigator = createSwitchNavigator({
   },
   homeStack: createBottomTabNavigator({
     home: {
-      screen: createStackNavigator({
-        HomePage: HomeScreens,
-      }),
+      screen: createStackNavigator(
+        {
+          HomePage: HomeScreens,
+        },
+        {
+          defaultNavigationOptions: {
+            headerShown: false,
+          },
+        }
+      ),
       navigationOptions: {
         tabBarIcon: ({ focused, tintColor }) => {
           let icon =
@@ -84,11 +92,36 @@ const AppNavigation = createAppContainer(switchNavigator);
 
 export default function App() {
   return (
-    // <Provider store={store}>
-    <AppNavigation />
-    // </Provider>
+    <Provider store={store}>
+      <AppNavigation />
+    </Provider>
   );
 }
+
+// export default function App() {
+//   return (
+//     // <Provider store={store}>
+//     <NavigationContainer>
+//       <Stack.Navigator>
+//         <Stack.Screen
+//           name="LandingScreen"
+//           component={LandingScreen}
+//           options={{
+//             headerShown: false,
+//           }}
+//         />
+//         <Stack.Screen
+//           name="homeStack"
+//           component={tabScreenNavigation}
+//           options={{
+//             headerShown: false,
+//           }}
+//         />
+//       </Stack.Navigator>
+//     </NavigationContainer>
+//     // </Provider>
+//   );
+// }
 
 const styles = StyleSheet.create({
   tabIcon: {
