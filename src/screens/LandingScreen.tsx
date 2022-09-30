@@ -1,16 +1,16 @@
 import { StyleSheet, Text, View, Image, Dimensions } from "react-native";
 import React, { useEffect, useState } from "react";
 import * as Location from "expo-location";
-import { useDispatch } from "react-redux";
-import { USER_LOCATION } from "../redux/models";
+import { connect } from "react-redux";
+import { addLocation } from "../redux/action/UserLocatin";
 
 const screenWidth = Dimensions.get("screen").width;
-
 const LandingScreen = (props: any) => {
-  const dispactch = useDispatch();
   const [address, setAddress] = useState<Location.LocationGeocodedAddress>();
-  const [errorMsg, setErrorMsg] = useState("");
-  const [displayAddress, setDisplayAddress] = useState("Wating for Loction");
+  const [errorMsg, setErrorMsg] = useState<string>();
+
+  const [displayAddress, setDisplayAddress] =
+    useState<string>("Wating for Loction");
 
   useEffect(() => {
     (async () => {
@@ -30,15 +30,14 @@ const LandingScreen = (props: any) => {
         });
         for (let item of addressResponce) {
           setAddress(item);
-          dispactch({
-            type: USER_LOCATION,
-            data: item,
-          });
+          props.addLocation(item);
+          // dispactch(addLocation(item));
           let currentAddress = `${item?.name},${item?.street},${item?.postalCode},${item?.country}`;
           setDisplayAddress(currentAddress);
           if (currentAddress.length > 0) {
             setTimeout(() => {
               props?.navigation.navigate("homeStack");
+              // navigate("homeStack");
             }, 2000);
           }
           return;
@@ -66,7 +65,13 @@ const LandingScreen = (props: any) => {
   );
 };
 
-export default LandingScreen;
+const mapDispatchtoProps = (dispatch: any) => {
+  return {
+    addLocation: (location: any) => dispatch(addLocation(location)),
+  };
+};
+
+export default connect(null, mapDispatchtoProps)(LandingScreen);
 
 const styles = StyleSheet.create({
   container: {
