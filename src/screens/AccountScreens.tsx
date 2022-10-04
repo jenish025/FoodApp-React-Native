@@ -1,11 +1,12 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const AccountScreens = () => {
   return (
-    <View>
+    <SafeAreaView>
       <Text>AccountScreens</Text>
-    </View>
+    </SafeAreaView>
   );
 };
 

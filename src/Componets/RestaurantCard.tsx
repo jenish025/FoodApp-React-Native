@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity } from "react-native";
 import React from "react";
 
 const RestaurantCard = (props: any) => {
@@ -6,7 +6,7 @@ const RestaurantCard = (props: any) => {
   return (
     <TouchableOpacity
       style={styles.container}
-      onPress={() => props.onTap(item)}
+      onPress={() => props?.onTap(item)}
     >
       <Image
         style={styles.cardImg}

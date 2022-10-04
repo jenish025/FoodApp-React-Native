@@ -9,13 +9,18 @@ import { category } from "../LocalAppData/category";
 import { RestaurantData } from "../LocalAppData/category";
 import { TopFoodData } from "../LocalAppData/category";
 import RestaurantCard from "../Componets/RestaurantCard";
+import { useNavigation } from "@react-navigation/native";
 
 interface HomeScreensProps {
   userLocation: any;
+  // navigation: any;
 }
 
 const screenWidth = Dimensions.get("screen").width;
 const HomeScreens: React.FC<HomeScreensProps> = (props) => {
+  const Navigation: any = useNavigation();
+  // console.log(props.navigator);
+
   const { userLocation } = props;
   const [UserAddress, setUserAddress] = useState<string>();
 
@@ -31,18 +36,18 @@ const HomeScreens: React.FC<HomeScreensProps> = (props) => {
   };
 
   const onTapFoodItemItem = (item: any) => {
-    alert("food");
+    Navigation.navigate("FoodDetail", { item: item });
   };
   const onTapRestaurantItem = (item: any) => {
-    alert("list");
+    Navigation.navigate("RestaurantDetail", { item: item });
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.navigation}>
         <View style={styles.addressTextContainer}>
-          <Text>{UserAddress}</Text>
-          <Text>Edit</Text>
+          <Text style={{ width: "90%" }}>{UserAddress}</Text>
+          <Text style={{ width: "10%" }}>Edit</Text>
         </View>
         <View style={styles.searchBar}>
           <SearchBar />
@@ -54,12 +59,9 @@ const HomeScreens: React.FC<HomeScreensProps> = (props) => {
             horizontal
             showsHorizontalScrollIndicator={false}
             data={category}
+            keyExtractor={(item: any) => item.id}
             renderItem={({ item }) => (
-              <CategoryCard
-                item={item}
-                onTap={onTapCategoryItem}
-                keyExtractor={(item: any) => item.id}
-              />
+              <CategoryCard item={item} onTap={onTapCategoryItem} />
             )}
           />
           <Text style={{ fontSize: 25, margin: 8, color: "red" }}>

@@ -3,9 +3,11 @@ import React, { useEffect, useState } from "react";
 import * as Location from "expo-location";
 import { connect } from "react-redux";
 import { addLocation } from "../redux/action/UserLocatin";
+import { useNavigation } from "@react-navigation/native";
 
 const screenWidth = Dimensions.get("screen").width;
 const LandingScreen = (props: any) => {
+  const Navigation: any = useNavigation();
   const [address, setAddress] = useState<Location.LocationGeocodedAddress>();
   const [errorMsg, setErrorMsg] = useState<string>();
 
@@ -31,13 +33,11 @@ const LandingScreen = (props: any) => {
         for (let item of addressResponce) {
           setAddress(item);
           props.addLocation(item);
-          // dispactch(addLocation(item));
           let currentAddress = `${item?.name},${item?.street},${item?.postalCode},${item?.country}`;
           setDisplayAddress(currentAddress);
           if (currentAddress.length > 0) {
             setTimeout(() => {
-              props?.navigation.navigate("homeStack");
-              // navigate("homeStack");
+              Navigation.navigate("HomeStack", { test: "test" });
             }, 2000);
           }
           return;

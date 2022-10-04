@@ -1,4 +1,4 @@
-import { USER_LOCATION } from "../models/index";
+import { USER_LOCATION, UPDATE_CART } from "../models/index";
 
 // user Location information
 export const addLocation: any = (location: any) => {
@@ -8,4 +8,12 @@ export const addLocation: any = (location: any) => {
   };
 };
 
+// Cart Update
+
+export const addCartItem: any = (cart: any) => {
+  return {
+    type: UPDATE_CART,
+    data: cart,
+  };
+};
 //user login and user data information
