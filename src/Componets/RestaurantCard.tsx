@@ -8,10 +8,7 @@ const RestaurantCard = (props: any) => {
       style={styles.container}
       onPress={() => props?.onTap(item)}
     >
-      <Image
-        style={styles.cardImg}
-        source={require("../LocalAppData/img/3.jpeg")}
-      />
+      <Image style={styles.cardImg} source={item.img} />
     </TouchableOpacity>
   );
 };

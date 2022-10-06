@@ -12,10 +12,7 @@ const FoodeDetailedScreen: React.FC<any> = (props) => {
   const { params } = route;
   return (
     <View style={styles.container}>
-      <Image
-        style={styles.img}
-        source={require("../LocalAppData/img/6.jpeg")}
-      />
+      <Image style={styles.img} source={params?.item?.img} />
       <Text style={{ fontSize: 35, margin: 10 }}>{params?.item?.foodName}</Text>
       <Text style={{ fontSize: 25, margin: 10 }}>
         {params?.item?.foodDescription}

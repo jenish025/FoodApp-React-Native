@@ -6,26 +6,24 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import { addCartItem } from "../redux/action/UserLocatin";
 
 const screenWidth = Dimensions.get("screen").width;
 const FoodListCard = (props: any) => {
   const { item, cartItem } = props;
-  console.log(cartItem?.CartUpdateReducer.cart);
 
-  const buyItem = (item: any) => {
+  const onAdd = (data: any) => {
+    item.unit = data.unit + 1;
     props.addCartItem(item);
   };
 
-  const onAdd = () => {
-    console.log("add");
+  const onRemove = (data: any) => {
+    item.unit = data.unit - 1;
+    props.addCartItem(item);
   };
 
-  const onRemove = () => {
-    console.log("remove");
-  };
+  useEffect(() => {}, [cartItem]);
 
   return (
     <>
@@ -41,24 +39,29 @@ const FoodListCard = (props: any) => {
         </View>
         <View style={styles.itemcontainer}>
           <Text style={{ fontSize: 22 }}>{item?.foodName}</Text>
-          {/* <Text>Dissadhkashdkashdkjhsakjdha</Text> */}
           <Text style={{ fontSize: 17, marginTop: 8 }}>${item?.foodPrice}</Text>
         </View>
 
-        {cartItem?.CartUpdateReducer.cart.length > 0 ? (
+        {item.unit > 0 ? (
           <View style={styles.addremovecontainer}>
-            <TouchableOpacity onPress={onRemove} style={styles.addRemove}>
+            <TouchableOpacity
+              onPress={() => onRemove(item)}
+              style={styles.addRemove}
+            >
               <Text>-</Text>
             </TouchableOpacity>
-            <Text style={{ fontSize: 25, margin: 5 }}>{item.unit}</Text>
-            <TouchableOpacity onPress={onAdd} style={styles.addRemove}>
+            <Text style={{ fontSize: 25, margin: 5 }}>{item.unit || 0}</Text>
+            <TouchableOpacity
+              onPress={() => onAdd(item)}
+              style={styles.addRemove}
+            >
               <Text>+</Text>
             </TouchableOpacity>
           </View>
         ) : (
           <TouchableOpacity
             style={styles.buycontainer}
-            onPress={() => buyItem(item)}
+            onPress={() => onAdd(item)}
           >
             <Text style={{ fontSize: 17 }}>Add</Text>
           </TouchableOpacity>
@@ -70,16 +73,11 @@ const FoodListCard = (props: any) => {
 
 const mapStatetoProps = (state: any) => {
   return {
-    cartItem: state,
-  };
-};
-const mapDispatchtoProps = (dispatch: any) => {
-  return {
-    addCartItem: (cart: any) => dispatch(addCartItem(cart)),
+    cartItem: state?.AllFoodListReducer,
   };
 };
 
-export default connect(mapStatetoProps, mapDispatchtoProps)(FoodListCard);
+export default connect(mapStatetoProps, null)(FoodListCard);
 
 const styles = StyleSheet.create({
   container: {
@@ -92,7 +90,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   imgcontainer: {
-    width: "26%",
+    width: screenWidth - 280,
   },
   img: {
     height: 100,
@@ -100,7 +98,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   itemcontainer: {
-    width: "55%",
+    width: screenWidth - 210,
   },
   buycontainer: {
     width: "20%",

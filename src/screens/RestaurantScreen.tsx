@@ -6,7 +6,7 @@ import {
   Text,
   View,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-navigation";
 import FoodListCard from "../Componets/FoodListCard";
 import { useNavigation } from "@react-navigation/native";
@@ -15,6 +15,10 @@ import { addCartItem } from "../redux/action/UserLocatin";
 
 const RestaurantScreen = (props: any) => {
   const Navigation: any = useNavigation();
+  const [foodListData, setFoodListData] = useState(
+    props?.route?.params.item?.foodList
+  );
+
   const onTapFood = (item: any) => {
     Navigation.navigate("FoodDetail", { item: item });
   };
@@ -22,10 +26,7 @@ const RestaurantScreen = (props: any) => {
   return (
     <SafeAreaView style={{ margin: 2, flex: 1 }}>
       <View style={styles.container}>
-        <Image
-          style={styles.img}
-          source={require("../LocalAppData/img/4.jpeg")}
-        />
+        <Image style={styles.img} source={props?.route?.params?.item?.img} />
       </View>
       <View style={styles.titlecontainer}>
         <Text style={{ fontSize: 25 }}>
@@ -41,18 +42,21 @@ const RestaurantScreen = (props: any) => {
         </Text>
       </View>
 
-      <ScrollView style={styles.foodlist}>
-        <View>
-          <FlatList
-            showsHorizontalScrollIndicator={false}
-            data={props?.route?.params.item?.foodList}
-            keyExtractor={(item: any) => item.id}
-            renderItem={({ item }) => (
-              <FoodListCard item={item} onTap={onTapFood} />
-            )}
+      <FlatList
+        style={styles.foodlist}
+        showsHorizontalScrollIndicator={false}
+        data={foodListData}
+        keyExtractor={(item: any) => item.id}
+        renderItem={({ item }) => (
+          <FoodListCard
+            item={item}
+            onTap={onTapFood}
+            addCartItem={props.addCartItem}
+            setFoodListData={setFoodListData}
+            foodListData={foodListData}
           />
-        </View>
-      </ScrollView>
+        )}
+      />
     </SafeAreaView>
   );
 };
@@ -63,7 +67,12 @@ const mapStatetoProps = (state: any) => {
   };
 };
 
-export default connect(mapStatetoProps, null)(RestaurantScreen);
+const mapDispatchtoProps = (dispatch: any) => {
+  return {
+    addCartItem: (cart: any) => dispatch(addCartItem(cart)),
+  };
+};
+export default connect(mapStatetoProps, mapDispatchtoProps)(RestaurantScreen);
 
 const styles = StyleSheet.create({
   container: {

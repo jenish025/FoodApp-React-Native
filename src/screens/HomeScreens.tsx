@@ -6,21 +6,19 @@ import SearchBar from "../Componets/SearchBar";
 import CategoryCard from "../Componets/CategoryCard";
 import { FlatList } from "react-native-gesture-handler";
 import { category } from "../LocalAppData/category";
-import { RestaurantData } from "../LocalAppData/category";
 import { TopFoodData } from "../LocalAppData/category";
 import RestaurantCard from "../Componets/RestaurantCard";
 import { useNavigation } from "@react-navigation/native";
 
 interface HomeScreensProps {
   userLocation: any;
+  foodData: any;
   // navigation: any;
 }
 
 const screenWidth = Dimensions.get("screen").width;
 const HomeScreens: React.FC<HomeScreensProps> = (props) => {
   const Navigation: any = useNavigation();
-  // console.log(props.navigator);
-
   const { userLocation } = props;
   const [UserAddress, setUserAddress] = useState<string>();
 
@@ -70,13 +68,10 @@ const HomeScreens: React.FC<HomeScreensProps> = (props) => {
           <FlatList
             horizontal
             showsHorizontalScrollIndicator={false}
-            data={RestaurantData}
+            data={props?.foodData}
+            keyExtractor={(item: any) => item.id}
             renderItem={({ item }) => (
-              <RestaurantCard
-                item={item}
-                onTap={onTapRestaurantItem}
-                keyExtractor={(item: any) => item.id}
-              />
+              <RestaurantCard item={item} onTap={onTapRestaurantItem} />
             )}
           />
           <Text style={{ fontSize: 25, margin: 8, color: "red" }}>
@@ -86,17 +81,13 @@ const HomeScreens: React.FC<HomeScreensProps> = (props) => {
             horizontal
             showsHorizontalScrollIndicator={false}
             data={TopFoodData}
+            keyExtractor={(item: any) => item.id}
             renderItem={({ item }) => (
-              <RestaurantCard
-                item={item}
-                onTap={onTapFoodItemItem}
-                keyExtractor={(item: any) => item.id}
-              />
+              <RestaurantCard item={item} onTap={onTapFoodItemItem} />
             )}
           />
         </ScrollView>
       </View>
-      {/* <View style={styles.footer}></View> */}
     </SafeAreaView>
   );
 };
@@ -104,6 +95,7 @@ const HomeScreens: React.FC<HomeScreensProps> = (props) => {
 const mapStatetoProps = (state: any) => {
   return {
     userLocation: state,
+    foodData: state?.AllFoodListReducer,
   };
 };
 
@@ -125,7 +117,7 @@ const styles = StyleSheet.create({
     flex: 15,
   },
   footer: {
-    flex: 1,
+    flex: 0,
   },
   addressTextContainer: {
     width: screenWidth - 31,

@@ -2,8 +2,9 @@ import { StyleSheet, Text, View, Image, Dimensions } from "react-native";
 import React, { useEffect, useState } from "react";
 import * as Location from "expo-location";
 import { connect } from "react-redux";
-import { addLocation } from "../redux/action/UserLocatin";
+import { addAllFoodList, addLocation } from "../redux/action/UserLocatin";
 import { useNavigation } from "@react-navigation/native";
+import { RestaurantData } from "../LocalAppData/category";
 
 const screenWidth = Dimensions.get("screen").width;
 const LandingScreen = (props: any) => {
@@ -15,6 +16,7 @@ const LandingScreen = (props: any) => {
     useState<string>("Wating for Loction");
 
   useEffect(() => {
+    props?.addAllFoodList(RestaurantData);
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
@@ -33,8 +35,10 @@ const LandingScreen = (props: any) => {
         for (let item of addressResponce) {
           setAddress(item);
           props.addLocation(item);
+
           let currentAddress = `${item?.name},${item?.street},${item?.postalCode},${item?.country}`;
           setDisplayAddress(currentAddress);
+
           if (currentAddress.length > 0) {
             setTimeout(() => {
               Navigation.navigate("HomeStack", { test: "test" });
@@ -68,6 +72,7 @@ const LandingScreen = (props: any) => {
 const mapDispatchtoProps = (dispatch: any) => {
   return {
     addLocation: (location: any) => dispatch(addLocation(location)),
+    addAllFoodList: (foodList: any) => dispatch(addAllFoodList(foodList)),
   };
 };
 
@@ -82,7 +87,7 @@ const styles = StyleSheet.create({
     flex: 2,
   },
   body: {
-    flex: 9,
+    flex: 10,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -107,6 +112,6 @@ const styles = StyleSheet.create({
     fontWeight: "300",
   },
   footer: {
-    flex: 1,
+    flex: 0,
   },
 });
